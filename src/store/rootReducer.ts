@@ -1,13 +1,12 @@
 
 import { combineReducers } from '@reduxjs/toolkit';
-import { apiSlice } from '../services/api/apiSlice';
-import authReducer from '../features/auth/store/authSlice';
-import themeReducer from '../theme/themeSlice';
+import authReducer from '@features/auth/authSlice';
+import networkReducer from '@features/network/networkSlice';
 
 const rootReducer = combineReducers({
-  [apiSlice.reducerPath]: apiSlice.reducer,
   auth: authReducer,
-  theme: themeReducer,
+  network: networkReducer,
 });
 
+export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

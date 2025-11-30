@@ -1,42 +1,47 @@
 
-import React, { useRef, useState } from 'react';
-import { FlatList, View, StyleSheet } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { completeOnboarding } from '@features/auth/authSlice';
 import OnboardingSlide from '../components/OnboardingSlide';
-import PaginationDots from '../components/PaginationDots';
-import { Button } from '../../../components/ui/Button';
+import Pagination from '../components/Pagination';
+import NextButton from '../components/NextButton';
+
+const { width } = Dimensions.get('window');
 
 const slides = [
   {
     key: '1',
-    lottie: require('../../../assets/lottie/slide1.json'),
-    title: 'Welcome to Capzi',
-    subtitle: 'The best ride-booking app in town.',
+    title: 'Welcome to the App!',
+    description: 'This is a description for the first slide.',
+    animation: require('../../../../assets/lottie/slide1.json'),
   },
   {
     key: '2',
-    lottie: require('../../../assets/lottie/slide2.json'),
-    title: 'Request a Ride',
-    subtitle: 'Easily request a ride from your current location.',
+    title: 'This is the Second Slide',
+    description: 'This is a description for the second slide.',
+    animation: require('../../../../assets/lottie/slide2.json'),
   },
   {
     key: '3',
-    lottie: require('../../../assets/lottie/slide3.json'),
-    title: 'Track Your Driver',
-    subtitle: 'Track your driver in real-time and know their exact arrival time.',
+    title: 'This is the Third Slide',
+    description: 'This is a description for the third slide.',
+    animation: require('../../../../assets/lottie/slide3.json'),
   },
 ];
 
-const OnboardingScreen = ({ navigation }) => {
+const OnboardingScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const onViewableItemsChanged = useRef(({ viewableItems }) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index);
+  const handleNext = () => {
+    if (currentIndex < slides.length - 1) {
+      flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
+    } else {
+      dispatch(completeOnboarding());
     }
-  }).current;
-
-  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+  };
 
   return (
     <View style={styles.container}>
@@ -47,14 +52,14 @@ const OnboardingScreen = ({ navigation }) => {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewConfig}
+        keyExtractor={(item) => item.key}
+        onMomentumScrollEnd={(event) => {
+          const index = Math.round(event.nativeEvent.contentOffset.x / width);
+          setCurrentIndex(index);
+        }}
       />
-      <PaginationDots data={slides} currentIndex={currentIndex} />
-      <View style={styles.buttonContainer}>
-        <Button title="Log in" onPress={() => navigation.navigate('Auth')} />
-        <Button title="I'm new, sign me up" onPress={() => navigation.navigate('Auth')} />
-      </View>
+      <Pagination data={slides} currentIndex={currentIndex} />
+      <NextButton onPress={handleNext} />
     </View>
   );
 };
@@ -62,12 +67,7 @@ const OnboardingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 40,
+    backgroundColor: '#fff',
   },
 });
 

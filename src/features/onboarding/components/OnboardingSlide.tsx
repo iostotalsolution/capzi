@@ -1,42 +1,40 @@
 
 import React from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import LottieView from 'lottie-react-native';
 
-const OnboardingSlide = ({ item }) => {
-  const { width } = useWindowDimensions();
+const { width } = Dimensions.get('window');
 
+const OnboardingSlide = ({ item }) => {
   return (
-    <View style={[styles.container, { width }]}>
-      <LottieView source={item.lottie} autoPlay loop style={styles.lottie} />
+    <View style={[styles.slide, { width }]}>
+      <LottieView source={item.animation} autoPlay loop style={styles.animation} />
       <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.subtitle}>{item.subtitle}</Text>
+      <Text style={styles.description}>{item.description}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  slide: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 20,
   },
-  lottie: {
-    width: 200,
-    height: 200,
-    marginBottom: 40,
+  animation: {
+    width: width * 0.8,
+    height: width * 0.8,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
     textAlign: 'center',
+    marginBottom: 10,
   },
-  subtitle: {
+  description: {
     fontSize: 16,
     textAlign: 'center',
-    color: 'gray',
   },
 });
 

@@ -5,8 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthNavigator from './navigators/AuthNavigator';
 import MainNavigator from './navigators/MainNavigator';
-import OnboardingScreen from '../features/onboarding/screens/OnboardingScreen';
-import { useAppSelector } from '../hooks/useRedux';
+import OnboardingScreen from '@features/onboarding/screens/OnboardingScreen';
+import { useAppSelector } from '@hooks/useRedux';
 
 const Stack = createNativeStackNavigator();
 
